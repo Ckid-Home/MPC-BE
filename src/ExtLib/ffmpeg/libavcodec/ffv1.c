@@ -144,6 +144,8 @@ av_cold int ff_ffv1_init_slice_contexts(FFV1Context *f)
         sc->slice_height = sye - sys;
         sc->slice_x      = sxs;
         sc->slice_y      = sys;
+        sc->sx           = sx;
+        sc->sy           = sy;
 
         sc->sample_buffer = av_malloc_array((f->width + 6), 3 * MAX_PLANES *
                                             sizeof(*sc->sample_buffer));
@@ -213,6 +215,8 @@ av_cold int ff_ffv1_close(AVCodecContext *avctx)
 
         ff_refstruct_unref(&sc->plane);
     }
+
+    ff_refstruct_unref(&s->slice_damaged);
 
     av_freep(&avctx->stats_out);
     for (j = 0; j < s->quant_table_count; j++) {

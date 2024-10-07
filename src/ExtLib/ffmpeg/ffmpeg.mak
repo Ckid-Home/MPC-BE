@@ -67,6 +67,7 @@ OBJ_DIRS = $(OBJ_DIR) \
 	$(OBJ_DIR)libavcodec \
 	$(OBJ_DIR)libavcodec/bsf \
 	$(OBJ_DIR)libavcodec/aac \
+	$(OBJ_DIR)libavcodec/opus \
 	$(OBJ_DIR)libavcodec/hevc \
 	$(OBJ_DIR)libavcodec/vvc \
 	$(OBJ_DIR)libavcodec/x86 \
@@ -180,6 +181,7 @@ SRCS_LC = \
 	libavcodec/cllc.c \
 	libavcodec/codec_desc.c \
 	libavcodec/codec_par.c \
+	libavcodec/container_fifo.c \
 	libavcodec/cook.c \
 	libavcodec/cscd.c \
 	libavcodec/d3d11va.c \
@@ -239,6 +241,7 @@ SRCS_LC = \
 	libavcodec/elsdec.c \
 	libavcodec/encode.c \
 	libavcodec/error_resilience.c \
+	libavcodec/executor.c \
 	libavcodec/exif.c \
 	libavcodec/faandct.c \
 	libavcodec/faanidct.c \
@@ -330,6 +333,7 @@ SRCS_LC = \
 	libavcodec/lagarith.c \
 	libavcodec/lagarithrac.c \
 	libavcodec/latm_parser.c \
+	libavcodec/lcevcdec.c \
 	libavcodec/libdav1d.c \
 	libavcodec/libfdk-aacdec.c \
 	libavcodec/libspeexdec.c \
@@ -438,16 +442,6 @@ SRCS_LC_B = \
 	libavcodec/nvdec_vc1.c \
 	libavcodec/nvdec_vp9.c \
 	libavcodec/options.c \
-	libavcodec/opus_celt.c \
-	libavcodec/opus_parse.c \
-	libavcodec/opus_parser.c \
-	libavcodec/opus_pvq.c \
-	libavcodec/opus_rc.c \
-	libavcodec/opus_silk.c \
-	libavcodec/opusdec.c \
-	libavcodec/opusdec_celt.c \
-	libavcodec/opusdsp.c \
-	libavcodec/opustab.c \
 	libavcodec/packet.c \
 	libavcodec/parser.c \
 	libavcodec/parsers.c \
@@ -586,6 +580,20 @@ SRCS_LC_B = \
 	libavcodec/xiph.c \
 	libavcodec/xvididct.c \
 	libavcodec/zlib_wrapper.c \
+	\
+	libavcodec/opus/celt.c \
+	libavcodec/opus/dec.c \
+	libavcodec/opus/dec_celt.c \
+	libavcodec/opus/dsp.c \
+	libavcodec/opus/parse.c \
+	libavcodec/opus/parser.c \
+	libavcodec/opus/pvq.c \
+	libavcodec/opus/rc.c \
+	libavcodec/opus/silk.c \
+	libavcodec/opus/dec.c \
+	libavcodec/opus/dec_celt.c \
+	libavcodec/opus/dsp.c \
+	libavcodec/opus/tab.c \
 	\
 	libavcodec/vvc/dec.c \
 	libavcodec/vvc/dsp.c \
@@ -907,7 +915,9 @@ SRCS_YASM_LC = \
 	libavcodec/x86/h26x/h2656_inter.asm \
 	\
 	libavcodec/x86/vvc/vvc_alf.asm \
+	libavcodec/x86/vvc/vvc_dmvr.asm \
 	libavcodec/x86/vvc/vvc_mc.asm \
+	libavcodec/x86/vvc/vvc_of.asm \
 	libavcodec/x86/vvc/vvc_sad.asm
 
 SRCS_YASM_LF = 

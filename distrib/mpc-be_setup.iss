@@ -68,7 +68,7 @@
   #define Description  = app_name + " x64 " + app_version
   #define VisualElementsManifest = "VisualElements\mpc-be64.VisualElementsManifest.xml"
 #endif
-#define mpcvr_desc     = "MPC Video Renderer 0.8.5"
+#define mpcvr_desc     = "MPC Video Renderer 0.8.7"
 
 [Setup]
 #ifdef Win32Build
@@ -160,10 +160,38 @@ Name: ua; MessagesFile: compiler:Languages\Ukrainian.isl
 #endif
 
 ; Include installer's custom messages
-#include "custom_messages.iss"
+#include ".\CustomMessages\custom_messages.iss"
+#ifdef localize
+#include ".\CustomMessages\custom_messages.br.iss"
+#include ".\CustomMessages\custom_messages.by.iss"
+#include ".\CustomMessages\custom_messages.ca.iss"
+#include ".\CustomMessages\custom_messages.cz.iss"
+#include ".\CustomMessages\custom_messages.de.iss"
+#include ".\CustomMessages\custom_messages.el.iss"
+#include ".\CustomMessages\custom_messages.es.iss"
+#include ".\CustomMessages\custom_messages.eu.iss"
+#include ".\CustomMessages\custom_messages.fr.iss"
+#include ".\CustomMessages\custom_messages.he.iss"
+#include ".\CustomMessages\custom_messages.hu.iss"
+#include ".\CustomMessages\custom_messages.hy.iss"
+#include ".\CustomMessages\custom_messages.it.iss"
+#include ".\CustomMessages\custom_messages.ja.iss"
+#include ".\CustomMessages\custom_messages.kr.iss"
+#include ".\CustomMessages\custom_messages.nl.iss"
+#include ".\CustomMessages\custom_messages.pl.iss"
+#include ".\CustomMessages\custom_messages.ro.iss"
+#include ".\CustomMessages\custom_messages.ru.iss"
+#include ".\CustomMessages\custom_messages.sc.iss"
+#include ".\CustomMessages\custom_messages.sk.iss"
+#include ".\CustomMessages\custom_messages.sv.iss"
+#include ".\CustomMessages\custom_messages.tc.iss"
+#include ".\CustomMessages\custom_messages.tr.iss"
+#include ".\CustomMessages\custom_messages.ua.iss"
+#endif
 
 [Messages]
-BeveledLabel = {#BeveledLabel}
+WelcomeLabel1=[name/ver]
+BeveledLabel={#BeveledLabel}
 
 [Types]
 Name: default; Description: {cm:types_DefaultInstallation}
@@ -189,6 +217,7 @@ Name: desktopicon\user;         Description: {cm:tsk_CurrentUser};       GroupDe
 Name: desktopicon\common;       Description: {cm:tsk_AllUsers};          GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
 Name: pintotaskbar;             Description: {cm:PinToTaskBar};          GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.4
 
+Name: longpathsenable;          Description: {cm:tsk_LongPathsEnable};   GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; MinVersion: 10.0.14393; Check: not LongPathIsEnabled()
 ;;ResetSettings
 Name: reset_settings;           Description: {cm:tsk_ResetSettings};     GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: SettingsExist()
 
@@ -432,6 +461,19 @@ begin
   Result := FileExists(ExpandConstant('{app}\{#mpcbe_ini}'));
 end;
 
+function LongPathIsEnabled(): Boolean;
+var
+  Value: Cardinal ;
+begin
+  if not RegQueryDWordValue(HKEY_LOCAL_MACHINE, 'SYSTEM\CurrentControlSet\Control\FileSystem', 'LongPathsEnabled', Value) then
+    Value := 0;
+
+  if Value = 0 then
+    Result := False // LongPathsEnabled not found or not enabled
+  else
+    Result := True; // is enabled
+end;
+
 // Check if settings exist
 function SettingsExist(): Boolean;
 begin
@@ -493,8 +535,11 @@ var
 begin
   if CurStep = ssPostInstall then
   begin
-     if WizardIsTaskSelected('pintotaskbar') then
+    if WizardIsTaskSelected('pintotaskbar') then
       PinToTaskbar(ExpandConstant('{app}\{#mpcbe_exe}'), True);
+
+    if WizardIsTaskSelected('longpathsenable') then
+      RegWriteDWordValue(HKLM, 'SYSTEM\CurrentControlSet\Control\FileSystem', 'LongPathsEnabled', 1);
 
     if WizardIsTaskSelected('reset_settings') then
       CleanUpSettingsAndFiles();
